@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 require('dotenv').config();
-
+const router = require('express').Router
 app.use(express.json());
 
 mongoose
@@ -38,8 +38,7 @@ const productSchema = new mongoose.Schema({
 const ProductModel = mongoose.model("products", productSchema);
 
 // Create
-
-app.post("/api/products", async (req, res) => {
+router.post("/api/products", async (req, res) => {
    await ProductModel.create({
     product_name: req.body.product_name,
     product_price: req.body.product_price,
@@ -52,34 +51,29 @@ app.post("/api/products", async (req, res) => {
 
 
 // get route
-
-app.get('/api/products' , async(req , res)=>{
+router.get('/api/products' , async(req , res)=>{
    const allProucts = await ProductModel.find({isInStock:true})
 
    return res.json(allProucts)
 })
 
 // Get product by id
-
-app.get('/api/products/:id' , async(req , res)=>{
+router.get('/api/products/:id' , async(req , res)=>{
  const product = await ProductModel.findById(req.params.id)
 
  return res.json(product)
 })
 
 // Update product
-
-app.put('/api/products/:id' , async(req , res)=>{
+router.put('/api/products/:id' , async(req , res)=>{
   const updatedProduct = await ProductModel.findByIdAndUpdate(req.params.id , req.body)
   return res.json(updatedProduct)
 })
 
 
 /// Delete a Resource
-
-app.delete('/api/products/:id' , async(req , res)=>{
+router.delete('/api/products/:id' , async(req , res)=>{
   const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id)
-
   res.json(deletedProduct)
 })
 
